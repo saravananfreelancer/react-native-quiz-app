@@ -24,6 +24,9 @@ export default class App extends React.Component {
   userDetailsSocketEmiter(){
     this.socket.emit("userDetails",{});
   }
+  userQuizAns(data){
+    this.socket.emit("quizResponse",data);
+  }
 	socketReceiver() {
     this.userDetailsSocketEmiter();
     //console.log("sadsa")
@@ -102,7 +105,7 @@ export default class App extends React.Component {
 		} else if(this.state.pageState == 2){
 			return <Timer pageChange={this.changeState.bind(this)} timer={this.state.timer}/>
 		} else if(this.state.pageState == 3){
-			return <Question questionTimer={this.state.questionTime} breakTime={this.state.breakTime} changes={this.state.changeType} questionData={this.state.questionData} pageChange={this.changeState.bind(this)}/>
+			return <Question questionTimer={this.state.questionTime} userQuizAns={this.userQuizAns.bind(this)} breakTime={this.state.breakTime} changes={this.state.changeType} questionData={this.state.questionData} pageChange={this.changeState.bind(this)}/>
 		}
 	}
 	errorApploading(err) {

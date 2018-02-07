@@ -23,6 +23,7 @@ export default class Timer extends React.Component {
       question:this.props.questionData.question,
       timeInterval:10
   	}
+    this.apiDone = false;
 	//this.props.socket.on("quizTiming",function(){
 		//console.log(data,"quizTiming");
 	//});
@@ -33,6 +34,7 @@ export default class Timer extends React.Component {
     if(newProps.changes == "time") {
       this.setState({"timeInterval":10 - newProps.questionTimer,"break":false,});
     } else if(newProps.changes == "question") {
+      this.apiDone = false;
       this.setState({
         "timeInterval":10,
         "break":false,
@@ -40,21 +42,37 @@ export default class Timer extends React.Component {
         correct:newProps.questionData.answer,
         question:newProps.questionData.question,
         showAnwser:false,
+        selected:-1,
       });
     } else if(newProps.changes == "showAnwser") {
+      this.callAPI();
       this.setState({
         showAnwser:true,
         "break":false,
         "timeInterval":newProps.questionTimer,
       })
     } else if(newProps.changes == "break") {
-      console.log("ASdsa break",newProps)
+      //console.log("ASdsa break",newProps)
       this.setState({
         "break":true,
         "breakTime":newProps.breakTime
       })
     }
     //console.log(newProps)
+  }
+  callAPI() {
+    if(!this.apiDone){
+        this.apiDone = true;
+        this.props.userQuizAns({
+          "questionNo":1,
+          "isAnswerCorrect":this.state.selected == this.state.correct ? true:false
+        })
+    }
+
+  }
+  clickHandler(index){
+    console.log(index);
+    this.setState({"selected":index});
   }
   buttonController(data,index){
 	if(this.state.showAnwser){
@@ -67,9 +85,17 @@ export default class Timer extends React.Component {
 		}
 	} else {
 		if(this.state.selected == index){
-		  return (<View elevation ={3} key={index} style={styles.answered}><Text style={styles.ansText}>{data}</Text></View>)
+		    return (<View elevation ={3} key={index} style={styles.answered}>
+          <TouchableHighlight onPress={this.clickHandler.bind(this,index)}>
+            <Text style={styles.ansText}>{data}</Text>
+          </TouchableHighlight>
+        </View>)
 		} else {
-		return (<View elevation ={3} key={index} style={styles.unanswer}><Text style={styles.ansTextAns}>{data}</Text></View>)
+		    return (<View elevation ={3} key={index} style={styles.unanswer}>
+        <TouchableHighlight onPress={this.clickHandler.bind(this,index)}>
+          <Text style={styles.ansTextAns}>{data}</Text>
+        </TouchableHighlight>
+        </View>)
 		}
 	}
 
