@@ -48,7 +48,7 @@ export default class Timer extends React.Component {
         "timeInterval":newProps.questionTimer,
       })
     } else if(newProps.changes == "break") {
-      console.log("ASdsa break",newProps)
+      console.log("ASdsa break")
       this.setState({
         "break":true,
         "breakTime":newProps.breakTime
@@ -91,21 +91,28 @@ export default class Timer extends React.Component {
 			<View style={styles.panel}>
           {
             this.state.break?
-            (<View>
-              <View style={styles.breakTimerBox}><Text style={styles.breakTimerText}>{this.state.breakTime}</Text></View></View>):(<View style={styles.panelInner}>
+            (<View><Text>Its Time For Break</Text></View>):(<View style={styles.panelInner}>
     					<View style={styles.referal}>
     					</View>
     					<View style={styles.questionHeader}>
     						<View style={styles.absolute}><Text style={styles.onlineTxt}>Online</Text><Text style={styles.onlinUser}>0 users</Text></View>
-                <View style={styles.absolute}>
-                    <View style={styles.headerTextCenter}>
-          							<ImageBackground
-          							source={require('../images/circle.png')}
-          							style={styles.timecnt}>
-          								<Text style={styles.counter}>{this.state.timeInterval}</Text>
-          							</ImageBackground>
-						        </View>
-                </View>
+    						<View style={styles.absolute}>
+    							<View style={styles.headerTextCenter}>
+    								<AnimatedCircularProgress ref="circularProgress"
+    								  size={60}
+    								  width={2}
+    								  fill={3}
+    								  style={styles.timecnt}
+    								  tintColor="red"
+    								  onAnimationComplete={() => console.log('onAnimationComplete')}
+    								  backgroundColor="#3d5875" />
+    							</View>
+    						</View>
+    						<View style={styles.absolute}>
+    							<View style={styles.headerTextCenter}>
+    								<Text style={styles.counter}>{this.state.timeInterval}</Text>
+    							</View>
+    						</View>
     						<View style={styles.absolute}>
     						<Text style={styles.refPointText}>Referal</Text>
     						<Text style={styles.refPoint}>Point: <Text style={styles.colorChange}>143</Text></Text></View>
@@ -212,9 +219,7 @@ absolute:{
 	  height:40
   },
   timecnt:{
-    width:100,
-	  height:100,
-	  justifyContent: 'center',
+	  marginTop:0
   },
   counter:{
 	fontSize: 30,
@@ -305,21 +310,5 @@ paddingRight:20
 	  height:50,
 	  borderRadius:25,
 	  marginBottom:10
-  },
-  breakTimerBox:{
-    backgroundColor:'white',
-    width:width - 130,
-    height:width - 130,
-    borderRadius:(width - 130) / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 20,
-    borderColor: 'rgba(255,255,255,0.3)',
-  },
-  breakTimerText:{
-    color:"black",
-    fontSize:60,
-    fontWeight:"bold",
-    fontFamily: "montserrat-regular"
   }
 });

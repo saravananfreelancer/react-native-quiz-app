@@ -10,11 +10,12 @@ var ajax = require("../utils/ajax.js");
 import moment from 'moment';
 
 export default class Timer extends React.Component {
- 
+
   constructor(props) {
     super(props);
+	console.log(this.props.timer,"sasa");
 	 this.state = {
-		 examTime:moment().add(1,"minutes").add(10,"seconds").format("YYYY-MM-DD HH:mm:ss")
+		 examTime:moment().add(this.props.timer.quizStartIn,"seconds").format("YYYY-MM-DD HH:mm:ss")
 	 }
   }
   componentDidMount(){
@@ -24,15 +25,17 @@ export default class Timer extends React.Component {
 	 }.bind(this));
   }
   diffence(oldDate){
-	var now = moment().format("YYYY-MM-DD HH:mm:ss");
+	var now = moment().format("YYYY-MM-DD HH:mm:ss");//this.state.currentTime;
 	var examTime =  this.state.examTime;
+	//console.log(examTime,now);
 	var duration = moment.duration(moment(examTime).diff(moment(now)));
 	var hours = parseInt(duration.hours());
 	var minutes = parseInt(duration.minutes())
 	var seconds = parseInt(duration.seconds());
 	if( hours == 0 && minutes == 0 && seconds == 0){
-		console.log("ASdas");
+		//console.log("ASdas");
 		clearInterval(this.TickeTimer);
+		//this.
 	} else {
 		if(hours < 10){
 		hours = "0" + hours
@@ -46,7 +49,7 @@ export default class Timer extends React.Component {
 		this.setState({"diffTime":hours+":"+ minutes + ":"+ seconds})
 		//console.log(hours,minutes,seconds)
 	}
-	
+
   }
   render(){
 	return (<ImageBackground
@@ -57,16 +60,16 @@ export default class Timer extends React.Component {
 			</View>
 			<View style={styles.panel}>
 				<View style={styles.newquiz}>
-					<Text style={styles.quizTime}>NEW QUIZ IN</Text>						
-					<Text style={styles.timer}> {this.state.diffTime}</Text>					
-				</View>				
+					<Text style={styles.quizTime}>NEW QUIZ IN</Text>
+					<Text style={styles.timer}> {this.state.diffTime}</Text>
+				</View>
 			</View>
 		</ImageBackground>);
   }
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,	
+    flex: 1,
     width: undefined,
     height: undefined,
 	backgroundColor:'transparent'
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   "header":{
-	flex: .07, 
+	flex: .07,
 	backgroundColor: 'transparent',
 	justifyContent: 'center',
 	paddingRight:10,

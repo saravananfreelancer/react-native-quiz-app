@@ -31,24 +31,30 @@ export default class Home extends React.Component {
 		}
   }
   userDetails(data){
-	console.log("data",data); 
+	console.log("data",data);
 	this.setState({
 		"username":data.userDetails.Username,
 		"credit":data.userDetails.creditCount,
 		"imageLink": data.userDetails.image,
 		"price":data.userDetails.price,
-		"quizTime":data.quizDetails
+		"quizTime":data.quizDetails || []
 	})
+  }
+  changeState(data,quizStart){
+	  setTimeout(()=>{
+			this.props.pageChange(2,data);
+	  },100)
+	//console.log(data,quizStart);
   }
   render(){
     return (
       <ImageBackground
         source={require('../images/landing.png')}
         style={styles.container}>
-		
+
 		<View style={styles.header}>
 			<View style={styles.absolute}><Text style={styles.headerText}>IQ</Text></View>
-			<View style={styles.absolute}><Text style={styles.headerTextHelp}><Ionicons name="md-help-circle" size={33} color="white"/></Text></View>			
+			<View style={styles.absolute}><Text style={styles.headerTextHelp}><Ionicons name="md-help-circle" size={33} color="white"/></Text></View>
 		</View>
 		<View style={styles.panel}>
 			{
@@ -56,31 +62,31 @@ export default class Home extends React.Component {
 				<View style={styles.nextGameContainer}><Text style={styles.nextGame}>Next Games</Text></View>:null
 			}
 			{
-				
+
 				this.state && this.state.quizTime.length > 0?this.state.quizTime.map(function(data,index){
 					return (<View key={index} style={styles.quiz}>
 						<View style={styles.absoluteQuiz}><Text style={styles.quizTime}>{moment(data.quizOn).format("DD/MM h:mmA")}</Text></View>
-						<View style={styles.absoluteQuiz}><Text style={styles.quizPrice}>${data.price} price</Text></View>	
+						<View style={styles.absoluteQuiz}><Text style={styles.quizPrice}>${data.price} price</Text></View>
 					</View>)
-				}):null 
+				}):null
 			}
 		</View>
 		<View style={styles.bottom}>
 			<View style={styles.userPanel}>
 				<View style={styles.absoluteProfile}>
 					<View style={styles.profileNameContainer}>
-						<Image source={{uri:this.state.imageLink}} style={styles.profileImage}></Image>					
+						<Image source={{uri:this.state.imageLink}} style={styles.profileImage}></Image>
 					</View>
 					<View style={styles.profileNameContainer}>
 						<Text style={styles.profileName}>{this.state.username}</Text>
 						<Text style={styles.profilePoint}>{this.state.credit} points</Text>
 					</View>
 				</View>
-				<View style={styles.absoluteProfile}><Text style={styles.profilePrize}>${this.state.price} price</Text></View>	
+				<View style={styles.absoluteProfile}><Text style={styles.profilePrize}>${this.state.price} price</Text></View>
 			</View>
 			<View style={styles.bottomRefal}>
 				<Text style={styles.referal}>Get a Referal Code</Text>
-				<View style={styles.referalButton}><Text style={styles.friends}>Invite Friends</Text></View>	
+				<View style={styles.referalButton}><Text style={styles.friends}>Invite Friends</Text></View>
 			</View>
 		</View>
       </ImageBackground>
@@ -90,7 +96,7 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,	
+    flex: 1,
     width: undefined,
     height: undefined,
 	backgroundColor:'transparent'
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
 	paddingLeft:20
   },
   "header":{
-	flex: .07, 
+	flex: .07,
 	backgroundColor: 'transparent',
 	justifyContent: 'center',
 	paddingRight:10,
@@ -151,9 +157,9 @@ const styles = StyleSheet.create({
         width: '100%',
         alignContent: 'center',
         justifyContent: 'center',
-	paddingLeft:15,	
+	paddingLeft:15,
 	paddingRight:15
-  },  
+  },
   bottom:{
 	flex: .3,
 	alignItems: 'center',
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
 	width: '100%',
 	alignContent: 'center',
 	justifyContent: 'center',
-	paddingLeft:10,	
+	paddingLeft:10,
 	paddingRight:10
   },
   profileNameContainer:{
@@ -202,7 +208,7 @@ const styles = StyleSheet.create({
 	  fontSize: 20,
 	  color: "rgb(255,255,255)",
 	  fontFamily: "montserrat-regular",
-	  fontWeight: "bold",	  
+	  fontWeight: "bold",
 	  alignSelf: 'flex-end',
   },
   referal:{
@@ -230,7 +236,7 @@ const styles = StyleSheet.create({
   },
   nextGameContainer:{
 	  marginBottom:10,
-	  alignItems: 'flex-start',	  
+	  alignItems: 'flex-start',
 	  alignSelf: 'flex-start',
 	  paddingLeft:25
   },
@@ -241,5 +247,5 @@ const styles = StyleSheet.create({
 	fontWeight: "bold",
 	alignSelf: 'flex-start',
   }
-  
+
 });
