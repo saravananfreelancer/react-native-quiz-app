@@ -33,6 +33,10 @@
     "react-native-facebook-login": "^1.6.0",
     "react-native-fbsdklogin": "0.0.8",
     "react-native-fontawesome": "^5.7.0",
-    "socket.io-client": "^2.0.4"
+    "react-native-material-dropdown": "^0.7.2",
+    "react-native-material-textfield": "^0.12.0",
+    "react-native-popup-dialog": "^0.10.46",
+    "socket.io-client": "^2.0.4",
+    "underscore": "^1.8.3"
   }
 }

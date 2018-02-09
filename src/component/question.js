@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View ,StatusBar,ImageBackground,Button,Dimensions,Image,TouchableHighlight,AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View ,StatusBar,ImageBackground,Button,Dimensions,Image,TouchableHighlight,AsyncStorage,ToastAndroid} from 'react-native';
 import Icon from 'react-native-fa-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Font,Facebook,Alert} from 'expo';
@@ -9,15 +9,16 @@ var config = require("../config/index.js");
 var ajax = require("../utils/ajax.js");
 import moment from 'moment';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
+var selectedOption = 1;
 export default class Timer extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props.questionData,"sadsad")
+    //console.log(this.props,"onload")
   	this.state = {
+      mode:this.props.questionData.mode,
   		options:this.props.questionData.option,
-  		selected:-1,
+  		selected:selectedOption,
   		showAnwser:false,
   		correct:this.props.questionData.answer,
       question:this.props.questionData.question,
@@ -34,18 +35,21 @@ export default class Timer extends React.Component {
     if(newProps.changes == "time") {
       this.setState({"timeInterval":10 - newProps.questionTimer,"break":false,});
     } else if(newProps.changes == "question") {
+        //console.log(newProps.questionData.mode,"new prop")
       this.apiDone = false;
       this.setState({
+        mode:newProps.questionData.mode,
         "timeInterval":10,
         "break":false,
         options:newProps.questionData.option,
         correct:newProps.questionData.answer,
         question:newProps.questionData.question,
         showAnwser:false,
-        selected:-1,
+        selected:selectedOption,
       });
     } else if(newProps.changes == "showAnwser") {
       this.callAPI();
+      console.log("asdsa")
       this.setState({
         showAnwser:true,
         "break":false,
@@ -61,6 +65,7 @@ export default class Timer extends React.Component {
     //console.log(newProps)
   }
   callAPI() {
+
     if(!this.apiDone){
         this.apiDone = true;
         this.props.userQuizAns({
@@ -71,8 +76,13 @@ export default class Timer extends React.Component {
 
   }
   clickHandler(index){
-    console.log(index);
-    this.setState({"selected":index});
+    //console.log(this.state);
+    if(this.state.mode == 1){
+      this.setState({"selected":index});
+    } else {
+      ToastAndroid.show("You have been eliminated from the quiz", ToastAndroid.SHORT);
+    }
+
   }
   buttonController(data,index){
 	if(this.state.showAnwser){
@@ -85,17 +95,17 @@ export default class Timer extends React.Component {
 		}
 	} else {
 		if(this.state.selected == index){
-		    return (<View elevation ={3} key={index} style={styles.answered}>
-          <TouchableHighlight onPress={this.clickHandler.bind(this,index)}>
-            <Text style={styles.ansText}>{data}</Text>
-          </TouchableHighlight>
-        </View>)
+		    return (<TouchableHighlight style={styles.unanswerTouch} key={index} onPress={this.clickHandler.bind(this,index)}>
+                  <View elevation ={3}  style={styles.answered}>
+                    <Text style={styles.ansText}>{data}</Text>
+                  </View>
+      </TouchableHighlight>)
 		} else {
-		    return (<View elevation ={3} key={index} style={styles.unanswer}>
-        <TouchableHighlight onPress={this.clickHandler.bind(this,index)}>
+		    return (<TouchableHighlight  style={styles.unanswerTouch} key={index} onPress={this.clickHandler.bind(this,index)}>
+        <View elevation ={3} style={styles.unanswer}>
           <Text style={styles.ansTextAns}>{data}</Text>
-        </TouchableHighlight>
-        </View>)
+        </View>
+        </TouchableHighlight>)
 		}
 	}
 
@@ -125,11 +135,15 @@ export default class Timer extends React.Component {
     						<View style={styles.absolute}><Text style={styles.onlineTxt}>Online</Text><Text style={styles.onlinUser}>0 users</Text></View>
                 <View style={styles.absolute}>
                     <View style={styles.headerTextCenter}>
-          							<ImageBackground
-          							source={require('../images/circle.png')}
-          							style={styles.timecnt}>
-          								<Text style={styles.counter}>{this.state.timeInterval}</Text>
-          							</ImageBackground>
+          							{
+                          this.state.showAnwser?
+                          <Text>Time Up</Text>:
+                          <ImageBackground
+            							source={require('../images/circle.png')}
+            							style={styles.timecnt}>
+            								<Text style={styles.counter}>{this.state.timeInterval}</Text>
+            							</ImageBackground>
+                        }
 						        </View>
                 </View>
     						<View style={styles.absolute}>
@@ -347,5 +361,11 @@ paddingRight:20
     fontSize:60,
     fontWeight:"bold",
     fontFamily: "montserrat-regular"
+  },
+  unanswerTouch:{
+    width:width-100,
+	  height:50,
+	  borderRadius:25,
+	  marginBottom:10
   }
 });
