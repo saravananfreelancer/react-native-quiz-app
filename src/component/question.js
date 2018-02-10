@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View ,StatusBar,ImageBackground,Button,Dimensions,Image,TouchableHighlight,AsyncStorage,ToastAndroid} from 'react-native';
 import Icon from 'react-native-fa-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { Font,Facebook,Alert} from 'expo';
+import { Font,Facebook,Alert,LinearGradient} from 'expo';
 var {height, width} = Dimensions.get('window');
 var { FBLogin, FBLoginManager } = require('react-native-facebook-login');
 var config = require("../config/index.js");
@@ -87,26 +87,48 @@ export default class Timer extends React.Component {
   buttonController(data,index){
 	if(this.state.showAnwser){
 		if(this.state.correct == index){
-		  return (<View elevation ={3} key={index} style={styles.correctans}><Text style={styles.ansText}>{data}</Text></View>)
+		  return (
+        <LinearGradient key={index} elevation ={3}
+           colors={['#1b8e00', '#8fc800', '#1b8e00']}
+          style={styles.correctans}
+           start={{x: 0.0, y: 1.0}} end={{x: 1.0, y: 1.0}}>
+          <View>
+            <Text style={styles.ansText}>{data}</Text>
+          </View>
+        </LinearGradient>)
 		} else if(this.state.selected == index){
-		  return (<View elevation ={3} key={index} style={styles.wrongans}><Text style={styles.ansText}>{data}</Text></View>)
+		  return (<LinearGradient key={index} elevation ={3}
+         colors={['#720000', '#de1400', '#720000']}
+        style={styles.wrongans}
+         start={{x: 0.0, y: 1.0}} end={{x: 1.0, y: 1.0}}>
+        <View>
+          <Text style={styles.ansText}>{data}</Text>
+        </View>
+      </LinearGradient>
+      )
 		} else {
-			return (<View elevation ={3} key={index} style={styles.unanswer}><Text style={styles.ansTextAns}>{data}</Text></View>)
+			return (
+        <LinearGradient key={index} elevation ={3}
+           colors={['#6db9fe', '#89f5fe', '#6db9fe']}
+          style={styles.unanswer}
+           start={{x: 0.0, y: 1.0}} end={{x: 1.0, y: 1.0}}>
+          <View>
+            <Text style={styles.ansTextAns}>{data}</Text>
+          </View>
+        </LinearGradient>
+        )
 		}
 	} else {
-		if(this.state.selected == index){
-		    return (<TouchableHighlight style={styles.unanswerTouch} key={index} onPress={this.clickHandler.bind(this,index)}>
-                  <View elevation ={3}  style={styles.answered}>
-                    <Text style={styles.ansText}>{data}</Text>
-                  </View>
-      </TouchableHighlight>)
-		} else {
-		    return (<TouchableHighlight  style={styles.unanswerTouch} key={index} onPress={this.clickHandler.bind(this,index)}>
-        <View elevation ={3} style={styles.unanswer}>
-          <Text style={styles.ansTextAns}>{data}</Text>
-        </View>
-        </TouchableHighlight>)
-		}
+    return (<TouchableHighlight  elevation ={3} style={styles.unanswerTouch} key={index} onPress={this.clickHandler.bind(this,index)}>
+    <LinearGradient elevation ={3}
+       colors={this.state.selected != index ?['#6db9fe', '#89f5fe', '#6db9fe']:['#2c003a', '#360762', '#2c003a']}
+      style={styles.unanswer}
+       start={{x: 0.0, y: 1.0}} end={{x: 1.0, y: 1.0}}>
+      <View>
+        <Text style={this.state.selected == index ?styles.ansText:styles.ansTextAns}>{data}</Text>
+      </View>
+    </LinearGradient>
+    </TouchableHighlight>);
 	}
 
   }
@@ -287,7 +309,7 @@ paddingRight:20
   },
   ansText:{
 	fontSize: 16,
-	color: "black",
+	color: "white",
 	fontFamily: "montserrat-regular"
   },
   alignTop:{
@@ -308,24 +330,27 @@ paddingRight:20
   unanswer:{
 	justifyContent: 'center',
 	  alignItems: 'center',
-	  backgroundColor:"#dddddd",
-	  width:width-100,
-	  height:50,
+	  width:width-104,
+    marginLeft:2,
+	  height:45,
 	  borderRadius:25,
-	  marginBottom:10
+	  marginBottom:10,
+    marginTop:2
   },
   answered:{
 	 justifyContent: 'center',
 	  alignItems: 'center',
 	  backgroundColor:"#330555",
-	  width:width-100,
-	  height:50,
+	  width:width-150,
+    marginLeft : 10,
+    marginTop:10,
+	  height:30,
 	  borderRadius:25,
 	  marginBottom:10
   },
   ansTextAns:{
 	fontSize: 16,
-	color: "white",
+	color: "black",
 	fontFamily: "montserrat-regular"
   },
   correctans:{
@@ -364,7 +389,7 @@ paddingRight:20
   },
   unanswerTouch:{
     width:width-100,
-	  height:50,
+	  height:55,
 	  borderRadius:25,
 	  marginBottom:10
   }

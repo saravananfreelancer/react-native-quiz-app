@@ -83,8 +83,6 @@ export default class Home extends React.Component {
     } else {
       ToastAndroid.show("You don't have any amout to withdraw", ToastAndroid.SHORT);
     }
-
-
   }
   render(){
     var _this = this;
